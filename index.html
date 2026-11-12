@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculator</title>
+<style>
+body{display:grid;place-items:center;min-height:100vh;margin:0;background:#f3f3f3;font-family:system-ui,sans-serif}
+.calc{width:280px;background:#fff;border:2px solid #111;border-radius:12px;padding:12px;box-shadow:4px 4px 0 #111}
+#d{width:100%;box-sizing:border-box;font-size:28px;text-align:right;padding:10px;margin-bottom:10px;border:2px solid #111;border-radius:8px;background:#fafafa}
+.g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+button{font-size:18px;padding:12px 0;border:2px solid #111;border-radius:8px;background:#fff;cursor:pointer;font-weight:600}
+button:active{transform:translateY(1px)}
+.o{background:#e8eaff}.e{background:#111;color:#fff}
+</style>
+</head>
+<body>
+<div class="calc">
+<input id="d" value="0" readonly>
+<div class="g">
+<button data-k="C">C</button><button data-k="±">±</button><button data-k="%">%</button><button class="o" data-k="/">÷</button>
+<button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button class="o" data-k="*">×</button>
+<button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button class="o" data-k="-">−</button>
+<button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button class="o" data-k="+">+</button>
+<button data-k="0" style="grid-column:span 2">0</button><button data-k=".">.</button><button class="e" data-k="=">=</button>
+</div>
+</div>
+<script>
+const d=document.getElementById('d');
+let e='';
+function calc(s){try{const v=Function('"use strict";return ('+s+')')();return Number.isFinite(v)?String(v):'Error'}catch{return 'Error'}}
+document.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.k;
+  if(k==='C'){e='';d.value='0';return}
+  if(k==='='){e=calc(e||'0');d.value=e;return}
+  if(k==='±'){e=e.startsWith('-')?e.slice(1):'-'+e;d.value=e||'0';return}
+  if(k==='%'){e=String((parseFloat(e)||0)/100);d.value=e;return}
+  if(d.value==='0'&&/[0-9.]/.test(k))e='';
+  e+=k;d.value=e;
+});
+</script>
+</body>
+</html>
